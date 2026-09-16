@@ -28,13 +28,12 @@ Antes de comenzar, asegúrate de tener instalado en tu computadora:
 Abre una terminal (o consola) en la carpeta donde deseas guardar tus proyectos y ejecuta:
 
 ```bash
-git clone https://github.com/TU_USUARIO_O_ORGANIZACION/NOMBRE_DEL_REPOSITORIO.git
+git clone https://github.com/generaltics3000-pixel/csi-digital-red-blue.git
 ```
-*(Reemplaza la URL por el enlace real del repositorio que te compartieron).*
 
 Luego ingresa a la carpeta del proyecto:
 ```bash
-cd NOMBRE_DEL_REPOSITORIO
+cd csi-digital-red-blue
 ```
 
 ---
