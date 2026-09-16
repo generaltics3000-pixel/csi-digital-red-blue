@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSI Digital — Panel del Facilitador</title>
+  <meta name="description" content="Panel de control docente para dinámicas escolares Red Team vs Blue Team.">
+  
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/student.css">
+  <link rel="stylesheet" href="/css/facilitador.css">
+</head>
+<body>
+  <div class="cyber-bg"></div>
+
+  <div class="app-container facilitator-container">
+    <!-- TOP NAVBAR -->
+    <header class="facilitator-navbar">
+      <div class="brand-title-box">
+        <h1 style="font-size: 1.4rem;" class="gradient-text-cyan">CSI DIGITAL</h1>
+        <span class="facilitator-tag">PANEL DEL FACILITADOR</span>
+      </div>
+
+      <div class="session-badge-box">
+        <div id="sessionCaseTitle" style="font-size: 0.85rem; color: var(--text-muted);">Sin sesión activa</div>
+        <div id="sessionCodePill" class="session-code-pill">----</div>
+      </div>
+
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button type="button" id="btnOpenQR" class="btn btn-outline btn-sm">📱 QR Alumnos</button>
+        <button type="button" id="btnOpenProjector" class="btn btn-cyan btn-sm">📽️ Pantalla Proyección</button>
+        <button type="button" id="btnExportReport" class="btn btn-outline btn-sm">📄 Exportar</button>
+      </div>
+    </header>
+
+    <!-- WIZARD SECTION (Crear Nueva Sesión) -->
+    <section id="wizardSection" class="card card-glass wizard-card">
+      <h2 style="font-size: 1.6rem; margin-bottom: 8px;" class="gradient-text-cyan">Configurar Nueva Sesión de Taller</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.95rem;">
+        Elegí la modalidad pedagógica, la cantidad de participantes y la duración del ejercicio.
+      </p>
+
+      <!-- Game Mode Switcher (Guided vs PvP vs Builder) -->
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label class="form-label" style="font-size: 1rem; color: #ffffff;">1. Modalidad de Juego / Taller</label>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 6px;">
+          <!-- 1. Guided Mode -->
+          <div class="case-option-card selected" id="modeCardGuided" style="padding: 16px; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--cyan); font-size: 1.05rem;">📁 Modo Caso Guiado</strong>
+              <span class="badge badge-cyan">Estándar</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;">
+              Análisis forense en equipos sobre un caso precargado (Phishing bancario o Smishing). Ideal para introducción al taller.
+            </p>
+          </div>
+
+          <!-- 2. PvP Mode -->
+          <div class="case-option-card" id="modeCardPvP" style="padding: 16px; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--red); font-size: 1.05rem;">⚔️ Duelo Cruzado (PvP)</strong>
+              <span class="badge badge-red">Interactiva</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;">
+              ¡Duelo en vivo! Los atacantes (Red Team) diseñan trampas que se disparan en tiempo real al celular del Blue Team rival.
+            </p>
+          </div>
+
+          <!-- 3. Builder Mode -->
+          <div class="case-option-card" id="modeCardBuilder" style="padding: 16px; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--yellow); font-size: 1.05rem;">🛠️ Laboratorio de Armado</strong>
+              <span class="badge badge-yellow">Individual</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;">
+              Los alumnos ensamblan paso a paso un mensaje (WhatsApp, Instagram o Correo) con feedback táctico y puntuación instantánea.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Picker (For Guided Mode) -->
+      <div class="form-group" id="guidedCaseContainer">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label class="form-label" style="font-size: 1rem; color: #ffffff;">2. Seleccioná el Caso a Trabajar</label>
+          <button type="button" id="btnOpenNewCase" class="btn btn-outline btn-sm">➕ Cargar Otro Caso</button>
+        </div>
+        <div id="casesContainer" class="case-selector-grid">
+          <!-- Cases injected via JS -->
+        </div>
+      </div>
+
+      <!-- Theme Picker (For PvP Mode) -->
+      <div class="form-group" id="pvpThemeContainer" style="display: none;">
+        <label class="form-label" style="font-size: 1rem; color: #ffffff;">2. Temática y Formato del Duelo Atacante</label>
+        <div id="pvpThemesGrid" class="case-selector-grid">
+          <!-- PvP themes injected via JS -->
+        </div>
+      </div>
+
+      <!-- Builder Config (For Builder Mode) -->
+      <div id="builderConfigContainer" style="display: none;">
+        <!-- Scenario Selector -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label class="form-label" style="font-size: 1rem; color: #ffffff;">2. Seleccioná la App / Escenario a Armar</label>
+          <div id="builderScenariosGrid" class="case-selector-grid">
+            <!-- Builder scenarios injected via JS -->
+          </div>
+        </div>
+
+        <!-- Objective Selector -->
+        <div class="form-group" style="margin-bottom: 24px;">
+          <label class="form-label" style="font-size: 1rem; color: #ffffff;">3. Objetivo Asignado a los Alumnos</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 6px;">
+            <div class="case-option-card selected" id="objCardPhishing" style="padding: 14px; cursor: pointer; border-color: var(--red);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: var(--red);">🎣 Ataque de Phishing / Engaño</strong>
+                <span class="badge badge-red">Atacante</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">
+                Los alumnos deben crear el engaño más creíble, combinando urgencia, suplantación y trampas técnicas eficaces.
+              </p>
+            </div>
+
+            <div class="case-option-card" id="objCardLegitimate" style="padding: 14px; cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: var(--green);">🟢 Señuelo Legítimo / Seguro</strong>
+                <span class="badge badge-green">Oficial</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">
+                Los alumnos deben armar una comunicación 100% auténtica y segura, evitando activar falsas alarmas forenses.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group & Timer Config -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px;">
+        <div class="form-group" id="groupCountWrapper">
+          <label for="groupCountInput" class="form-label" style="color: #ffffff;">Cantidad de Grupos (2 a 10)</label>
+          <input type="number" id="groupCountInput" class="form-control" value="4" min="2" max="10">
+          <span style="font-size: 0.78rem; color: var(--text-dim);">Recomendado: 4 o 6 grupos (50% Red, 50% Blue).</span>
+        </div>
+
+        <div class="form-group" id="studentCountWrapper" style="display: none;">
+          <label for="studentCountInput" class="form-label" style="color: #ffffff;">Capacidad Máx. de Alumnos (1 a 40)</label>
+          <input type="number" id="studentCountInput" class="form-control" value="25" min="1" max="40">
+          <span style="font-size: 0.78rem; color: var(--text-dim);">Cada alumno ingresa con su nombre y compite individualmente.</span>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between;">
+            <label for="durationInput" class="form-label" style="color: #ffffff;">Duración del Cronómetro</label>
+            <span id="durationValDisplay" style="color: var(--cyan); font-weight: bold;">15 min</span>
+          </div>
+          <input type="range" id="durationInput" class="form-control" value="15" min="5" max="30" step="1" style="padding: 0; accent-color: var(--cyan);">
+          <span style="font-size: 0.78rem; color: var(--text-dim);">Rango habitual: 10 a 20 minutos.</span>
+        </div>
+      </div>
+
+      <button type="button" id="btnCreateSession" class="btn btn-cyan btn-lg" style="width: 100%;">
+        ✨ Crear Sesión de Taller
+      </button>
+    </section>
+
+    <!-- DASHBOARD SECTION (Sesión en Vivo) -->
+    <main id="dashboardSection" style="display: none;">
+      <!-- Remote Projection Mode Switcher -->
+      <section class="projection-control-bar">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: bold;">Control Remoto de Pantalla de Proyección</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #ffffff;">Modo en Proyector:</div>
+        </div>
+
+        <div class="projection-modes-group" id="projModesGroup">
+          <button type="button" class="btn-proj-mode active" data-mode="lobby">1. 📽️ Lobby</button>
+          <button type="button" class="btn-proj-mode" data-mode="playing">2. ⏱️ En Juego</button>
+          <button type="button" class="btn-proj-mode" data-mode="review" id="btnProjReview">3. 🗣️ Puesta en Común</button>
+          <button type="button" class="btn-proj-mode" data-mode="revelation" id="btnProjRevelation">4. 🔍 Revelación</button>
+          <button type="button" class="btn-proj-mode" data-mode="ranking">5. 🏆 Ranking Final</button>
+        </div>
+
+        <!-- Timer Controls in Facilitator -->
+        <div class="timer-control-panel">
+          <span id="facTimerDigits" class="fac-timer-digits">15:00</span>
+          <button type="button" id="btnStartTimer" class="btn btn-cyan btn-sm" title="Iniciar/Reanudar">▶ Iniciar</button>
+          <button type="button" id="btnPauseTimer" class="btn btn-outline btn-sm" title="Pausar">⏸ Pausar</button>
+          <button type="button" id="btnAddMin" class="btn btn-outline btn-sm" title="Sumar 1 minuto">+1m</button>
+          <button type="button" id="btnSubMin" class="btn btn-outline btn-sm" title="Restar 1 minuto">-1m</button>
+          <button type="button" id="btnResetTimer" class="btn btn-outline btn-sm" title="Reiniciar">🔄</button>
+          <button type="button" id="btnForceClose" class="btn btn-red btn-sm" title="Cerrar envíos ya">⛔ Cerrar Envíos</button>
+        </div>
+      </section>
+
+      <!-- Review / Match Mode Navigator -->
+      <section id="reviewNavContainer" class="review-nav-bar" style="display: none;">
+        <button type="button" id="btnPrevReview" class="btn btn-outline btn-sm">◀ Anterior</button>
+        <div id="reviewCurrentGroupLabel" style="font-weight: bold; color: var(--cyan); font-size: 1.1rem;">Duelo #1</div>
+        <button type="button" id="btnNextReview" class="btn btn-cyan btn-sm">Siguiente ▶</button>
+      </section>
+
+      <!-- Builder Mode Participants Monitor -->
+      <section id="builderParticipantsSection" style="display: none; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h2 style="font-size: 1.25rem; color: var(--yellow); display: flex; align-items: center; gap: 8px;">
+              🛠️ Laboratorio de Armado: Alumnos en Vivo
+            </h2>
+            <div id="builderStatsSubtitle" style="font-size: 0.85rem; color: var(--text-dim);">
+              0 alumnos conectados · 0 entregas completadas
+            </div>
+          </div>
+          <span class="badge badge-yellow" id="builderObjectiveBadge">Objetivo: Phishing</span>
+        </div>
+
+        <div id="builderParticipantsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+          <!-- Injected via JS -->
+        </div>
+      </section>
+
+      <!-- PvP Matches Live Status (Only in PvP mode) -->
+      <section id="pvpMatchesSection" style="display: none; margin-bottom: 24px;">
+        <h2 style="font-size: 1.2rem; color: var(--red); margin-bottom: 12px;">⚔️ Estado de Duelos Cara a Cara (PvP)</h2>
+        <div id="pvpMatchesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+          <!-- Matches injected via JS -->
+        </div>
+      </section>
+
+      <!-- Groups Monitor Grid (Guided & PvP modes) -->
+      <section id="groupsMonitorSection">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h2 style="font-size: 1.2rem; color: #ffffff;">👥 Monitoreo de Grupos en Vivo</h2>
+          <span style="font-size: 0.85rem; color: var(--text-dim);">Las respuestas se actualizan automáticamente en tiempo real.</span>
+        </div>
+
+        <div id="groupsMonitorGrid" class="groups-monitor-grid">
+          <!-- Group cards injected via JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Floating Sound Toggle Button -->
+    <button type="button" id="soundToggle" class="sound-toggle" title="Activar/Silenciar Sonido" aria-label="Silenciar sonido">
+      🔊
+    </button>
+  </div>
+
+  <!-- QR MODAL -->
+  <div id="qrModal" class="modal-backdrop">
+    <div class="modal-content" style="text-align: center;">
+      <div class="modal-header">
+        <h3 style="color: var(--cyan);">QR de Acceso para Alumnos</h3>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        Los alumnos pueden escanear este código con la cámara de su celular para ingresar directamente:
+      </p>
+      <div style="margin: 20px 0; background: #0a0e17; padding: 16px; border-radius: 12px; display: inline-block; border: 1px solid var(--border-color);">
+        <img id="qrImage" src="" alt="Código QR de Acceso" style="width: 240px; height: 240px; display: block; border-radius: 8px;">
+      </div>
+      <div style="font-size: 1.4rem; font-weight: 900; color: var(--cyan); font-family: var(--font-mono); margin-bottom: 20px;" id="qrCodeText">
+        CSI-0000
+      </div>
+      <button type="button" id="btnCloseQR" class="btn btn-cyan" style="width: 100%;">Cerrar Ventana</button>
+    </div>
+  </div>
+
+  <!-- ANSWER PREVIEW MODAL -->
+  <div id="answerModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+      <div id="answerModalContent">
+        <!-- Injected dynamically -->
+      </div>
+      <div style="margin-top: 20px; text-align: right;">
+        <button type="button" id="btnCloseAnswer" class="btn btn-cyan">Cerrar Ventana</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW CUSTOM CASE MODAL -->
+  <div id="newCaseModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: var(--cyan);">➕ Cargar Nuevo Caso de Ejercicio</h3>
+      </div>
+      <div class="form-group">
+        <label for="newCaseTitle" class="form-label">Título del Caso</label>
+        <input type="text" id="newCaseTitle" class="form-control" placeholder="Ej: Correo falso de la Dirección Escolar">
+      </div>
+      <div class="form-group">
+        <label for="newCaseType" class="form-label">Tipo de Material</label>
+        <select id="newCaseType" class="form-control">
+          <option value="email">Correo Electrónico (Phishing)</option>
+          <option value="whatsapp">Chat de WhatsApp (Smishing)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="newCaseDesc" class="form-label">Contenido / Texto del Engaño</label>
+        <textarea id="newCaseDesc" class="form-control" placeholder="Escribí el texto que verán los alumnos con las 5 señales de alerta..."></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" id="btnCloseNewCase" class="btn btn-outline">Cancelar</button>
+        <button type="button" id="btnSaveNewCase" class="btn btn-cyan">Guardar y Usar Caso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/audio.js"></script>
+  <script src="/js/caseViewer.js"></script>
+  <script src="/js/facilitador.js"></script>
+</body>
+</html>

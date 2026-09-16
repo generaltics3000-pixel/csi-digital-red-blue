@@ -1,0 +1,24 @@
+# Dependencias de Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# package-lock.json se mantiene para reproducibilidad exacta
+
+# Entorno y variables secretas
+.env
+.env.local
+.env.*.local
+
+# Archivos de sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs y temporales
+logs/
+*.log
+scratch/

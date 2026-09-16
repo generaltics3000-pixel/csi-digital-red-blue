@@ -1,0 +1,27 @@
+{
+  "name": "red-blue-team-csi",
+  "version": "1.0.0",
+  "description": "Plataforma interactiva Red Team vs Blue Team para talleres de ciberseguridad escolar CSI Digital",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js"
+  },
+  "keywords": [
+    "cybersecurity",
+    "education",
+    "red-team",
+    "blue-team",
+    "phishing",
+    "gamification"
+  ],
+  "author": "Antigravity - CSI Digital",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1"
+  }
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSI Digital — Pantalla de Proyección</title>
+  <meta name="description" content="Vista de proyección en vivo (16:9) para talleres escolares CSI Digital.">
+  
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/student.css">
+  <link rel="stylesheet" href="/css/proyeccion.css">
+</head>
+<body>
+  <div class="cyber-bg"></div>
+
+  <div class="projector-viewport">
+    <!-- Top Bar -->
+    <header class="proj-topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="proj-brand gradient-text-cyan">CSI DIGITAL</span>
+        <span id="projModePill" class="proj-mode-pill">📽️ MODO LOBBY</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="color: var(--text-dim); font-size: 0.9rem;">CÓDIGO DE SESIÓN:</span>
+        <span id="projCodeDisplay" style="font-family: var(--font-mono); font-size: 1.4rem; font-weight: 900; color: var(--cyan);">----</span>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Projection Stage -->
+    <main id="projStage" class="proj-content-stage">
+      <div style="text-align: center; color: var(--text-muted);">
+        <h2>Conectando con el facilitador...</h2>
+      </div>
+    </main>
+
+    <!-- Confetti Canvas for Victory Ceremony -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Floating Sound Toggle Button -->
+    <button type="button" id="soundToggle" class="sound-toggle" title="Activar/Silenciar Sonido" aria-label="Silenciar sonido">
+      🔊
+    </button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/audio.js"></script>
+  <script src="/js/caseViewer.js"></script>
+  <script src="/js/proyeccion.js"></script>
+</body>
+</html>

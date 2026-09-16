@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CSI Digital — Red Team vs Blue Team</title>
+  <meta name="description" content="Módulo interactivo de ciberseguridad para talleres escolares: Red Team (Atacantes) vs Blue Team (Defensores).">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/student.css">
+</head>
+<body>
+  <div class="cyber-bg"></div>
+
+  <div class="app-container student-app">
+    <!-- JOIN SECTION -->
+    <section id="joinSection" class="join-card card-glass">
+      <div class="join-brand-logo gradient-text-cyan">CSI DIGITAL</div>
+      <div class="join-subtitle">Dinámica Red Team vs Blue Team</div>
+
+      <div id="joinError" class="badge badge-red" style="display: none; margin-bottom: 16px; width: 100%; text-align: center; padding: 10px;"></div>
+
+      <div class="form-group">
+        <label for="sessionCodeInput" class="form-label">Código de Sesión (4 dígitos)</label>
+        <input type="text" id="sessionCodeInput" class="form-control join-code-input" placeholder="CSI-1234" maxlength="8" autocomplete="off" autocorrect="off" autocapitalize="characters">
+      </div>
+
+      <!-- Join Mode Switcher: Group vs Individual Alias -->
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <button type="button" id="tabJoinGroup" class="btn btn-cyan btn-sm" style="flex: 1; padding: 6px 8px; font-size: 0.82rem;">
+          👥 Por Equipo
+        </button>
+        <button type="button" id="tabJoinAlias" class="btn btn-outline btn-sm" style="flex: 1; padding: 6px 8px; font-size: 0.82rem;">
+          👤 Individual (Alias)
+        </button>
+      </div>
+
+      <!-- Group Select -->
+      <div class="form-group" id="groupSelectWrapper">
+        <label for="groupSelect" class="form-label">Seleccioná tu Grupo</label>
+        <select id="groupSelect" class="form-control" style="font-size: 1.1rem; padding: 12px;">
+          <option value="1">Grupo 1</option>
+          <option value="2">Grupo 2</option>
+          <option value="3">Grupo 3</option>
+          <option value="4">Grupo 4</option>
+          <option value="5">Grupo 5</option>
+          <option value="6">Grupo 6</option>
+          <option value="7">Grupo 7</option>
+          <option value="8">Grupo 8</option>
+          <option value="9">Grupo 9</option>
+          <option value="10">Grupo 10</option>
+        </select>
+      </div>
+
+      <!-- Individual Alias Input -->
+      <div class="form-group" id="aliasInputWrapper" style="display: none;">
+        <label for="aliasInput" class="form-label">Tu Nombre o Alias</label>
+        <input type="text" id="aliasInput" class="form-control" placeholder="Ej: Lucas_3B" maxlength="20" style="font-size: 1.1rem; padding: 12px;">
+      </div>
+
+      <button type="button" id="btnJoin" class="btn btn-cyan btn-lg" style="width: 100%; margin-top: 16px;">
+        ⚡ Conectar Dispositivo
+      </button>
+
+      <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 20px;">
+        🔒 Sin registro ni datos personales. El facilitador asignará automáticamente la actividad.
+      </p>
+    </section>
+
+    <!-- GAME SECTION (Hidden until joined) -->
+    <main id="gameSection" style="display: none; width: 100%;">
+      <!-- Sticky Header -->
+      <header class="student-header">
+        <div class="student-team-badge">
+          <span id="groupName" style="font-weight: 800; font-size: 1.1rem;">Grupo 1</span>
+          <span id="teamBadge" class="badge badge-cyan">Conectando...</span>
+        </div>
+
+        <div id="timerBox" class="student-timer-box">
+          <span>⏱️</span>
+          <span id="timerDigits" class="timer-digits">15:00</span>
+        </div>
+      </header>
+
+      <!-- Case Material Container -->
+      <section id="materialContainer" class="case-material-container"></section>
+
+      <!-- Worksheet Container (Red / Blue) -->
+      <section id="worksheetContainer"></section>
+    </main>
+
+    <!-- Floating Sound Toggle Button -->
+    <button type="button" id="soundToggle" class="sound-toggle" title="Activar/Silenciar Sonido" aria-label="Silenciar sonido">
+      🔊
+    </button>
+  </div>
+
+  <!-- Submit Confirmation Modal -->
+  <div id="submitConfirmModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: var(--cyan);">¿Confirmar Envío Definitivo?</h3>
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem;">
+        Una vez enviada la respuesta, la pantalla quedará bloqueada en modo lectura para la puesta en común y no podrán hacer más cambios.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" id="btnCancelSubmit" class="btn btn-outline">Revisar de nuevo</button>
+        <button type="button" id="btnConfirmSubmit" class="btn btn-cyan">Sí, Enviar Respuesta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/audio.js"></script>
+  <script src="/js/caseViewer.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>
